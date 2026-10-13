@@ -28,6 +28,7 @@ Run `dist\Prisma.exe` to try your change. Please run the tests before opening a 
 | `src\Ui.cs`, `src\MainWindow.cs`, `src\Views*.cs`, `src\SettingsView.cs` | interface |
 | `src\Loc.cs` | translations (one line per text) |
 | `assets\`, `tools\make-icon.ps1` | logo and icon; run the script after changing the design |
+| `docs\images\`, `tools\make-screenshots.ps1` | README screenshots; build first, then run the script to refresh them (it starts the program, fills the views and photographs the window, so leave the mouse alone for a minute) |
 
 ## Translations
 Edit the table at the top of `src\Loc.cs`: `A("English text", "Deutsch", "Français", "Español")`. To add a language, add a column and a code to `Loc.Codes` / `Loc.Native`.

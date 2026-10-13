@@ -6,6 +6,19 @@ A calculator for Windows with a liquid-glass look, written in C# 5 and WPF. Stan
 
 [![CI](https://github.com/30jannik06/Prisma-Calc/actions/workflows/ci.yml/badge.svg)](https://github.com/30jannik06/Prisma-Calc/actions/workflows/ci.yml)
 
+## Screenshots
+| Standard (Aurora, dark) | Scientific (Sunset, light) |
+|---|---|
+| ![Standard calculator with history, Aurora dark](docs/images/standard-aurora-dark.png) | ![Scientific calculator with live result preview, Sunset light](docs/images/scientific-sunset-light.png) |
+
+| Graphing (Forest, dark) | Unit converter (Graphite, light) |
+|---|---|
+| ![Graphing three equations with hover trace, Forest dark](docs/images/graphing-forest-dark.png) | ![Length converter showing all units, Graphite light](docs/images/converter-graphite-light.png) |
+
+| Settings: language, appearance, theme style, accent, corners, effects (Ocean, dark) |
+|---|
+| ![Settings page, Ocean dark](docs/images/settings-ocean-dark.png) |
+
 ## Download
 Get `Prisma.zip` from the **Releases** page, unzip it and start `Prisma.exe`. It needs Windows 10 (1607 or newer) or Windows 11; .NET Framework 4.6.2+ is already part of them.
 
