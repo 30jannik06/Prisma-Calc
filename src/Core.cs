@@ -17,6 +17,7 @@ namespace Prisma
     {
         Standard, Scientific, Programmer, Graphing, Date,
         Currency, Volume, Length, Weight, Temperature, Energy, Area, Speed, Time, Power, Data, Pressure, Angle,
+        Subnet, IpConvert, Transfer,
         Settings
     }
 

@@ -75,15 +75,20 @@ namespace Prisma
             catch (Exception ex) { Log.Warn("Could not load the icon: " + ex.Message); return null; }
         }
 
-        public static string Caption(AppMode m)
+        public static string CaptionKey(AppMode m)
         {
             switch (m)
             {
-                case AppMode.Date: return Loc.T("Date calculation");
-                case AppMode.Weight: return Loc.T("Weight and mass");
-                default: return Loc.T(m.ToString());
+                case AppMode.Date: return "Date calculation";
+                case AppMode.Weight: return "Weight and mass";
+                case AppMode.Subnet: return "Subnet calculator";
+                case AppMode.IpConvert: return "Address converter";
+                case AppMode.Transfer: return "Transfer time";
+                default: return m.ToString();
             }
         }
+
+        public static string Caption(AppMode m) { return Loc.T(CaptionKey(m)); }
 
         public MainWindow(ThemeMode mode, AppMode start)
         {
@@ -244,6 +249,8 @@ namespace Prisma
             var list = new StackPanel();
             list.Children.Add(Section(Loc.T("CALCULATOR")));
             foreach (AppMode m in new[] { AppMode.Standard, AppMode.Scientific, AppMode.Programmer, AppMode.Graphing, AppMode.Date }) list.Children.Add(NavItem(m));
+            list.Children.Add(Section(Loc.T("NETWORK")));
+            foreach (AppMode m in new[] { AppMode.Subnet, AppMode.IpConvert, AppMode.Transfer }) list.Children.Add(NavItem(m));
             list.Children.Add(Section(Loc.T("CONVERTER")));
             foreach (AppMode m in new[] { AppMode.Currency, AppMode.Volume, AppMode.Length, AppMode.Weight, AppMode.Temperature, AppMode.Energy, AppMode.Area, AppMode.Speed, AppMode.Time, AppMode.Power, AppMode.Data, AppMode.Pressure, AppMode.Angle })
                 list.Children.Add(NavItem(m));
@@ -363,6 +370,9 @@ namespace Prisma
                 case AppMode.Programmer: return new ProgrammerView();
                 case AppMode.Graphing: return new GraphView(Ses);
                 case AppMode.Date: return new DateView();
+                case AppMode.Subnet: return new SubnetView();
+                case AppMode.IpConvert: return new AddressView();
+                case AppMode.Transfer: return new TransferView();
                 case AppMode.Settings: return new SettingsView(this);
                 default: return new ConverterView(m);
             }

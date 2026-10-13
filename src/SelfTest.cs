@@ -47,6 +47,7 @@ namespace Prisma
             RadiusTests();
             LayoutTests();
             BrandingTests();
+            NetTests.Run(Check);
             SettingsTests();
             ParserTests();
             StandardTests();
@@ -250,7 +251,7 @@ namespace Prisma
                 var missing = new List<string>();
                 foreach (AppMode m in Enum.GetValues(typeof(AppMode)))
                 {
-                    string key = m == AppMode.Date ? "Date calculation" : m == AppMode.Weight ? "Weight and mass" : m.ToString();
+                    string key = MainWindow.CaptionKey(m);
                     if (!Loc.Has(key)) missing.Add(key);
                 }
                 foreach (string st in ThemeManager.Styles) if (!Loc.Has(st)) missing.Add(st);
@@ -628,6 +629,8 @@ namespace Prisma
                 Check("date view difference text", dv.DifferenceText == "1 month, 1 day", dv.DifferenceText);
                 dv.SetAdd("2024-01-31", "0", "1", "0", false);
                 Check("date view add one month", dv.AddResultText.EndsWith("2024-02-29"), dv.AddResultText);
+
+                NetTests.RunUi(Check, w);
 
                 // Graphing, rendered into a bitmap (nothing is shown on screen)
                 w.SwitchTo(AppMode.Graphing);

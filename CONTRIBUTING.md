@@ -24,6 +24,7 @@ Run `dist\Prisma.exe` to try your change. Please run the tests before opening a 
 | Path | What |
 |---|---|
 | `src\Engines.cs` | expression parser, standard/programmer engines, dates, units |
+| `src\Net.cs`, `src\ViewsNet.cs` | network tools: IPv4/IPv6 maths, subnets, conversions, transfer time, and their views |
 | `src\Core.cs` | log, settings, theme palettes |
 | `src\Ui.cs`, `src\MainWindow.cs`, `src\Views*.cs`, `src\SettingsView.cs` | interface |
 | `src\Loc.cs` | translations (one line per text) |

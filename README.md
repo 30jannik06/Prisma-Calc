@@ -2,7 +2,7 @@
 
 ![Prisma logo](assets/prisma-256.png)
 
-A calculator for Windows with a liquid-glass look, written in C# 5 and WPF. Standard, scientific, programmer and graphing modes, date calculation and unit converters. No installer, no dependencies, no network access.
+A calculator for Windows with a liquid-glass look, written in C# 5 and WPF. Standard, scientific, programmer and graphing modes, date calculation, unit converters and network tools (IPv4/IPv6 subnets). No installer, no dependencies, no network access.
 
 [![CI](https://github.com/30jannik06/Prisma-Calc/actions/workflows/ci.yml/badge.svg)](https://github.com/30jannik06/Prisma-Calc/actions/workflows/ci.yml)
 
@@ -15,9 +15,9 @@ A calculator for Windows with a liquid-glass look, written in C# 5 and WPF. Stan
 |---|---|
 | ![Graphing three equations with hover trace, Forest dark](docs/images/graphing-forest-dark.png) | ![Length converter showing all units, Graphite light](docs/images/converter-graphite-light.png) |
 
-| Settings: language, appearance, theme style, accent, corners, effects (Ocean, dark) |
-|---|
-| ![Settings page, Ocean dark](docs/images/settings-ocean-dark.png) |
+| Subnet calculator with IPv6 (Ocean, dark) | Settings (Ocean, dark) |
+|---|---|
+| ![Subnet calculator for an IPv6 network, Ocean dark](docs/images/network-subnet-ocean-dark.png) | ![Settings page, Ocean dark](docs/images/settings-ocean-dark.png) |
 
 ## Download
 Get `Prisma.zip` from the **Releases** page, unzip it and start `Prisma.exe`. It needs Windows 10 (1607 or newer) or Windows 11; .NET Framework 4.6.2+ is already part of them.
@@ -35,6 +35,12 @@ Releases of public repositories also carry a build provenance attestation (`gh a
 - **Programmer** - HEX / DEC / OCT / BIN shown at the same time, QWORD / DWORD / WORD / BYTE word sizes, AND OR XOR NOT NAND NOR, shifts, rotate, signed wrap-around.
 - **Graphing** - up to four equations y = f(x), pan (drag), zoom (wheel or buttons), hover trace, zeros and extrema of the first equation.
 - **Date calculation** - difference between two dates (years, months, days, total days) and add/subtract years, months, days.
+
+**Network tools** (pure calculations; Prisma never contacts the network)
+- **Subnet calculator (IPv4 and IPv6)** - type `192.168.1.10/24`, `10.0.0.5 255.255.255.0` or `2001:db8::1/64`: network, broadcast, first/last host, mask, wildcard, address and host counts (exact, also for IPv6's huge numbers), address type (private, loopback, link-local, multicast, documentation, ...), class, binary form, short and long IPv6 forms. Also: *is this address inside the network?*, *split into subnets*, and *how big a subnet do I need for N hosts?*.
+- **Address converter** - dotted IPv4, decimal number, hexadecimal, binary, IPv4-mapped IPv6, IPv6 short/long form, reverse-DNS name. Accepts `192.168.1.1`, `3232235777`, `0xC0A80101`, `0b1100...`, `2001:db8::1`.
+- **Transfer time** - file size, line speed and time: solve for any one of them, with the usable share of the line in percent. Times can be typed as `90`, `1:30:00` or `2h 15m`.
+Click any result row to copy its value.
 
 **Converters** - Currency, Volume, Length, Weight and mass, Temperature, Energy, Area, Speed, Time, Power, Data, Pressure, Angle. Every converter also lists the value in all units of its category.
 Currency uses **example rates, not live rates** (no network access). Put your own rates in `%LOCALAPPDATA%\Prisma\rates.ini`, one `CODE=rate per 1 EUR` per line.
@@ -65,7 +71,7 @@ Prisma has no network access, starts no processes and runs as the normal user. I
 Needs only Windows' built-in `csc.exe` (.NET Framework 4.x developer files in `C:\Windows\Microsoft.NET\Framework64\v4.0.30319`). No downloads, no third-party dependency.
 ```
 powershell -ExecutionPolicy Bypass -File build.ps1     # compiles src\*.cs to dist\Prisma.exe
-powershell -ExecutionPolicy Bypass -File test.ps1      # 285 self-tests, no window shown, no network
+powershell -ExecutionPolicy Bypass -File test.ps1      # 377 self-tests, no window shown, no network
 powershell -ExecutionPolicy Bypass -File package.ps1   # dist\ + SHA256SUMS.txt + Prisma.zip (local only)
 powershell -ExecutionPolicy Bypass -File verify.ps1    # checks dist\ against SHA256SUMS.txt
 ```

@@ -91,5 +91,12 @@ Shoot 'converter-graphite-light.png' 'Graphite' 'Light' 'Length' {
     $e = Edits $w
     $e[0].GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('42.195')
 }
+Shoot 'network-subnet-ocean-dark.png' 'Ocean' 'Dark' 'Subnet' {
+    param($w)
+    $e = Edits $w
+    $e[0].GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('2001:db8:abcd:12::1/48'); Start-Sleep -Milliseconds 250
+    $e[1].GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('2001:db8:abcd:ff::5'); Start-Sleep -Milliseconds 250
+    $e[2].GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('52')
+}
 Shoot 'settings-ocean-dark.png' 'Ocean' 'Dark' 'Settings' $null
 Write-Host "Screenshots written to $out"

@@ -27,6 +27,20 @@ Decisions that shaped Prisma, why they were made, and what to change if you disa
 | Window size: the size the user sets (a move/resize that changes the size by more than 2 px, detected through WM_EXITSIZEMOVE) is kept across categories and restarts. A mode that needs more room (minimum 80% of its preferred size) enlarges the window only while it is shown. Opening the sidebar or history panel changes the width by the panel width. Growth is clamped to the primary work area | Respect the user's choice but never clip a mode | `MainWindow.TargetSize`, `FitWindow` |
 | Logo: a prism splitting a white beam into colours, designed for this project. Icon sizes below 256 px are classic bitmaps, only 256 px is PNG | Matches the name; older Windows APIs cannot read small PNG icon entries | Replace `assets/prisma-logo.svg`, update `tools/make-icon.ps1` and `Ui.Logo`, rerun the script |
 
+## Network tools
+| Decision | Why | If you disagree |
+|---|---|---|
+| Subnet, address and transfer tools are pure calculations; Prisma does not look anything up (no DNS, no ping, no whois). The reverse-DNS name is only computed as text | Keeps "no network access" true | A lookup would need network code and its own security review |
+| Addresses are parsed and formatted by Prisma's own code in `src/Net.cs` instead of `System.Net.IPAddress`, and IPv6 counts use decimal-string arithmetic instead of `BigInteger` | The self-tests assert that the program references no `System.Net` types and only the .NET Framework and WPF assemblies | Use the framework types if you accept a weaker "no networking API" check |
+| IPv4 parsing is strict: exactly four decimal parts, no leading zeros (`010` is ambiguous between decimal and octal), no shorthand like `1.2.3` | Avoids silent misreadings | `NetCalc.TryParseV4` |
+| IPv6 follows RFC 4291/5952: `::` once, optional embedded IPv4, longest zero run compressed (leftmost on ties), lower case. `[...]` and a `%zone` are accepted and the zone is ignored | Standard text form | `NetCalc.TryParseV6`, `FormatV6` |
+| /31 uses both addresses (point-to-point, RFC 3021) and /32 is one host; IPv6 has no broadcast and all addresses of a prefix count as usable | Matches current practice | `NetCalc.Subnet` |
+| Address types cover the common special ranges (private, shared/CGNAT, loopback, link-local, documentation, benchmarking, multicast, reserved; IPv6: unique local, global unicast, NAT64, 6to4, Teredo, IPv4-mapped); the list is not the full IANA registry | Enough for everyday use | Extend `Classify4` / `Classify6` |
+| "Hosts needed" picks the smallest subnet whose usable hosts (network and broadcast excluded) are at least N; one or two hosts give /30 | Classic LAN planning | `NetCalc.PrefixForHosts` |
+| Split lists at most 64 subnets and always shows the exact total | Keeps the screen and memory bounded | `NetCalc.Split` |
+| Transfer units: kB/MB/GB/TB are decimal (1000), KiB/MiB/GiB/TiB are binary (1024); speeds in bits or bytes per second; "share of the line" scales the speed (for protocol overhead) | The usual conventions | `TransferCalc` |
+| All inputs are length-limited (80 characters for addresses, 40 for durations) and every parser returns a message instead of throwing; fuzz tests cover them | Same input policy as the rest of the program | Constants in `NetCalc` / `TransferCalc` |
+
 ## Languages
 | Decision | Why | If you disagree |
 |---|---|---|
