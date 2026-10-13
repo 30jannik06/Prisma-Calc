@@ -170,7 +170,7 @@ namespace Prisma
             widths.Sort();
             Check("branding: Windows' image decoder reads all 7 icon sizes", string.Join(",", widths.ConvertAll(x => x.ToString()).ToArray()) == "16,24,32,48,64,128,256", string.Join(",", widths.ConvertAll(x => x.ToString()).ToArray()));
             var a = Assembly.GetExecutingAssembly().GetName();
-            Check("branding: version is 1.0.0.0", a.Version.ToString() == "1.0.0.0", a.Version.ToString());
+            Check("branding: version is 1.1.0.0", a.Version.ToString() == "1.1.0.0", a.Version.ToString());
 
             if (Application.Current == null) new Application();
             string oldS = Settings.Path;
