@@ -2,6 +2,7 @@
 /dist/
 /Prisma.zip
 /Prisma/
+/build/
 
 # Local scratch space used by the scripts and by manual testing
 /.tmp/

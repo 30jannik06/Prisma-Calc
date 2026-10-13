@@ -15,7 +15,6 @@ namespace Prisma
         const string Usage =
             "Prisma [--theme Default|Light|Dark] [--mode <name>] [--language System|en|de|fr|es] [--settings <file>] [--log <file>]\r\n" +
             "Prisma --print-theme [--theme <mode>]\r\n" +
-            "Prisma --selftest\r\n" +
             "Prisma --help\r\n" +
             "Modes: Standard Scientific Programmer Graphing Date Currency Volume Length Weight Temperature\r\n" +
             "       Energy Area Speed Time Power Data Pressure Angle\r\n" +
@@ -24,7 +23,7 @@ namespace Prisma
         public class Options
         {
             public ThemeMode? Theme; public AppMode? Mode; public string SettingsPath; public string LogPath;
-            public bool SelfTest, PrintTheme, Help; public string Error, Language;
+            public bool PrintTheme, Help; public string Error, Language;
         }
 
         public static Options Parse(string[] args)
@@ -34,7 +33,6 @@ namespace Prisma
             {
                 string a = args[i];
                 if (a == "--help" || a == "-h" || a == "/?") o.Help = true;
-                else if (a == "--selftest") o.SelfTest = true;
                 else if (a == "--print-theme") o.PrintTheme = true;
                 else if (a == "--theme" || a == "--settings" || a == "--log" || a == "--mode" || a == "--language")
                 {
@@ -83,7 +81,6 @@ namespace Prisma
             if (o.Help) { Console.Out.Write(Usage); return 0; }
             try
             {
-                if (o.SelfTest) return SelfTest.Run();
                 if (o.Theme.HasValue) Settings.Save(o.Theme.Value);
                 if (o.Language != null) Settings.Set("Language", o.Language);
                 Loc.Apply(Settings.Get("Language", "System"));

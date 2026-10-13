@@ -147,7 +147,7 @@ namespace Prisma
         // ---------------------------------------------------------------- branding
         static void BrandingTests()
         {
-            Stream st = Assembly.GetExecutingAssembly().GetManifestResourceStream("Prisma.ico");
+            Stream st = typeof(MainWindow).Assembly.GetManifestResourceStream("Prisma.ico");
             Check("branding: the icon is embedded in the program", st != null, "");
             if (st == null) return;
             byte[] ico;
@@ -169,8 +169,8 @@ namespace Prisma
             var widths = new List<int>(); foreach (BitmapFrame f in dec.Frames) widths.Add(f.PixelWidth);
             widths.Sort();
             Check("branding: Windows' image decoder reads all 7 icon sizes", string.Join(",", widths.ConvertAll(x => x.ToString()).ToArray()) == "16,24,32,48,64,128,256", string.Join(",", widths.ConvertAll(x => x.ToString()).ToArray()));
-            var a = Assembly.GetExecutingAssembly().GetName();
-            Check("branding: version is 1.1.0.0", a.Version.ToString() == "1.1.0.0", a.Version.ToString());
+            var a = typeof(MainWindow).Assembly.GetName();
+            Check("branding: version is 1.1.1.0", a.Version.ToString() == "1.1.1.0", a.Version.ToString());
 
             if (Application.Current == null) new Application();
             string oldS = Settings.Path;

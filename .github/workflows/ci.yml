@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: selftest-output
-          path: dist/selftest-output.txt
+          path: build/tests/selftest-output.txt
           if-no-files-found: ignore
           retention-days: 14
 

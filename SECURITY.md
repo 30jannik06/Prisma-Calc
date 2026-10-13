@@ -20,11 +20,19 @@
 - **Exploit mitigations:** ASLR, high-entropy ASLR and DEP are on in the built file (checked by the self-tests). The build treats warnings as errors.
 - **Crash safety:** unhandled errors are logged and, in the UI, do not close the window; the process also logs fatal errors.
 
-## Checked by tests (run `Prisma.exe --selftest`)
+## Checked by tests (run `test.ps1`)
 Random-input fuzzing (15,000 expressions, 12,000 key sequences on the two engines, 8,000 date cases, 10,000 extreme unit conversions), hostile `settings.ini` / `rates.ini` / log targets, path rejection, and properties of the built program (mitigations, manifest, referenced assemblies, no networking imports).
 
 ## Verifying a download
 `powershell -ExecutionPolicy Bypass -File verify.ps1 <folder>` compares the files with `SHA256SUMS.txt`. The checksum file travels with the program, so it detects accidental damage but not a deliberate swap of both; compare the hash of the zip against a value you got another way.
+
+## Antivirus false positives
+Prisma is a small, new, **unsigned** program, which is exactly what some antivirus engines treat with suspicion until a file has a download history. What we do about it:
+- The shipped `Prisma.exe` contains **no test code** and none of the strings that the security tests search for (names of download and networking APIs). The tests run from a separate program that loads `Prisma.exe` as a library, and a self-test checks that the released file stays free of them.
+- No network, process-launching or crypto API is referenced (also checked by the self-tests); the file has complete version information, a manifest that runs it as the normal user, and is built from public source by a public workflow.
+- Every release lists the SHA-256 hash of `Prisma.zip`, and public repositories also publish a build provenance attestation.
+
+If a scanner still flags a release: check the hash against the release page, then report a false positive to the vendor (for Microsoft Defender: Microsoft Security Intelligence, "Submit a file"), quoting the release link. Please also tell us the engine and the detection name in an issue so we can follow up.
 
 ## Known limits
 - The program is **not code-signed** (no certificate). Windows SmartScreen may warn on first start.

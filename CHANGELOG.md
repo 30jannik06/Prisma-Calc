@@ -2,6 +2,15 @@
 
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-10-13
+
+### Changed
+- **The released `Prisma.exe` no longer contains the self-tests.** They moved to a separate test program that loads the real `Prisma.exe` as a library. The shipped file is smaller (454 KB instead of 538 KB) and no longer contains strings such as `WebClient`, `DownloadString`, `urlmon` or `wininet` that the security tests used as search terms and that string-based antivirus heuristics can misread. A new self-test keeps it that way.
+- The `--selftest` command-line option is gone; run `test.ps1` instead.
+
+### Fixed
+- Antivirus programs that flagged `Prisma.exe` as suspicious because of those strings should no longer do so (not all engines can be checked; see SECURITY.md).
+
 ## [1.1.0] - 2026-10-13
 
 ### Added
@@ -9,7 +18,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
   - Subnet calculator for IPv4 and IPv6: network, broadcast, host range, mask, wildcard, exact address counts, address types and classes, binary and short/long forms, "is this address inside?", splitting into subnets, host planning.
   - Address converter: dotted decimal, decimal number, hexadecimal, binary, IPv4-mapped IPv6, IPv6 short/long form, reverse-DNS name.
   - Transfer time calculator: solve for time, speed or size, with the usable share of the line.
-- 92 more self-tests (377 in total), including fuzzing of the address and duration parsers.
+- 92 more self-tests (377 in total at that point), including fuzzing of the address and duration parsers.
 - Translations for all new texts (German, French, Spanish).
 - A network screenshot in the README.
 

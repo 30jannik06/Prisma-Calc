@@ -329,6 +329,7 @@ namespace Prisma
         // ------------------------------------------------- the built program
         static byte[] exe;
         static bool Has(string text) { return IndexOf(exe, Encoding.ASCII.GetBytes(text)) >= 0; }
+        static bool HasWide(string text) { return IndexOf(exe, Encoding.Unicode.GetBytes(text)) >= 0; }
 
         static int IndexOf(byte[] hay, byte[] needle)
         {
@@ -371,7 +372,7 @@ namespace Prisma
 
         static void ProgramPosture()
         {
-            string path = Assembly.GetExecutingAssembly().Location;
+            string path = typeof(MainWindow).Assembly.Location;     // the real Prisma.exe, not the test program
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) { check("posture: the program file can be inspected", false, path); return; }
             exe = File.ReadAllBytes(path);
             int pe = BitConverter.ToInt32(exe, 0x3C);
@@ -386,9 +387,17 @@ namespace Prisma
 
             var allowed = new HashSet<string> { "mscorlib", "System", "System.Core", "PresentationFramework", "PresentationCore", "WindowsBase", "System.Xaml" };
             var extra = new List<string>();
-            foreach (AssemblyName an in Assembly.GetExecutingAssembly().GetReferencedAssemblies()) if (!allowed.Contains(an.Name)) extra.Add(an.Name);
+            foreach (AssemblyName an in typeof(MainWindow).Assembly.GetReferencedAssemblies()) if (!allowed.Contains(an.Name)) extra.Add(an.Name);
             check("posture: only the .NET Framework and WPF assemblies are referenced", extra.Count == 0, string.Join(", ", extra.ToArray()));
 
+            var tests = new List<string>();
+            foreach (string t in new[] { "SelfTest", "HardeningTests", "NetTests", "TestMain", "Fuzz", "--selftest" })
+                if (Has(t)) tests.Add(t);
+            check("posture: the shipped program contains no test code", tests.Count == 0, string.Join(", ", tests.ToArray()));
+            var literals = new List<string>();
+            foreach (string t in new[] { "WebClient", "DownloadString", "DownloadFile", "HttpClient", "WebRequest", "TcpClient", "UdpClient", "ProcessStartInfo", "urlmon", "wininet", "winhttp", "ws2_32", "crypt32", "advapi32", "shell32" })
+                if (Has(t) || HasWide(t)) literals.Add(t);
+            check("posture: the shipped program contains none of the strings that antivirus scanners associate with downloaders", literals.Count == 0, string.Join(", ", literals.ToArray()));
             var found = new List<string>();
             foreach (string bad in new[] { "System.Net", "WebClient", "HttpClient", "WebRequest", "TcpClient", "UdpClient", "ProcessStartInfo", "DownloadString", "DownloadFile", "Assembly.LoadFrom" })
                 if (Has(bad)) found.Add(bad);
@@ -402,7 +411,7 @@ namespace Prisma
             int[] ic = IconResourceCounts(exe);
             check("branding: the program file carries its icon (1 icon group with 7 sizes)", ic[0] == 7 && ic[1] == 1, "icons=" + ic[0] + " groups=" + ic[1]);
             var vi = FileVersionInfo.GetVersionInfo(path);
-            check("branding: file properties name the product, version and licence", vi.ProductName == "Prisma" && vi.FileVersion == "1.1.0.0" && vi.CompanyName == "Prisma authors" && vi.LegalCopyright.Contains("MIT"), vi.ProductName + " " + vi.FileVersion);
+            check("branding: file properties name the product, version and licence", vi.ProductName == "Prisma" && vi.FileVersion == "1.1.1.0" && vi.CompanyName == "Prisma authors" && vi.LegalCopyright.Contains("MIT"), vi.ProductName + " " + vi.FileVersion);
         }
     }
 

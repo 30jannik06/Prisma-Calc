@@ -6,7 +6,7 @@ Thanks for helping. Prisma is a small calculator for Windows written in C# 5 and
 You need Windows 10 or 11 and Windows PowerShell 5.1 (both are there by default).
 ```
 powershell -ExecutionPolicy Bypass -File build.ps1    # warnings are errors
-powershell -ExecutionPolicy Bypass -File test.ps1     # all self-tests; must end with "0 failed"
+powershell -ExecutionPolicy Bypass -File test.ps1     # builds the test program, runs all self-tests; must end with "0 failed"
 powershell -ExecutionPolicy Bypass -File package.ps1  # optional: dist\ + Prisma.zip + SHA256SUMS.txt
 powershell -ExecutionPolicy Bypass -File verify.ps1   # optional: check the package
 ```
@@ -28,6 +28,7 @@ Run `dist\Prisma.exe` to try your change. Please run the tests before opening a 
 | `src\Core.cs` | log, settings, theme palettes |
 | `src\Ui.cs`, `src\MainWindow.cs`, `src\Views*.cs`, `src\SettingsView.cs` | interface |
 | `src\Loc.cs` | translations (one line per text) |
+| `tests\` | self-tests and fuzz tests. They are built into a separate `Prisma.Tests.exe` that loads the real `Prisma.exe`; **never put test code or test-only strings into `src\`**, they would end up in the released program |
 | `assets\`, `tools\make-icon.ps1` | logo and icon; run the script after changing the design |
 | `docs\images\`, `tools\make-screenshots.ps1` | README screenshots; build first, then run the script to refresh them (it starts the program, fills the views and photographs the window, so leave the mouse alone for a minute) |
 | `assets\social-preview.png`, `tools\make-social-preview.ps1` | the 1280 x 640 image GitHub shows when the repository is shared; regenerate after a design change and upload it under Settings > General > Social preview |

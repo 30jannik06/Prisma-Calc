@@ -59,29 +59,28 @@ Currency uses **example rates, not live rates** (no network access). Put your ow
 - Every style, variant, glass on/off and several accent colours are checked for readable contrast by the self-tests.
 
 ## Logo and icon
-The logo is a prism that splits a white beam into five colours, drawn from scratch for Prisma (not taken from any other app). It is the program icon (16 to 256 px, embedded in `Prisma.exe`), the window and taskbar icon, the mark in the sidebar and the picture on the About card in Settings. The file properties (product, version 1.1.0, company, licence) are set too.
+The logo is a prism that splits a white beam into five colours, drawn from scratch for Prisma (not taken from any other app). It is the program icon (16 to 256 px, embedded in `Prisma.exe`), the window and taskbar icon, the mark in the sidebar and the picture on the About card in Settings. The file properties (product, version 1.1.1, company, licence) are set too.
 - `assets\prisma.ico` - icon with 7 sizes (small sizes use thicker lines and three beams so they stay readable)
 - `assets\prisma-logo.svg` - vector logo; `assets\prisma-256.png` - preview
 - `tools\make-icon.ps1` regenerates all three (Windows PowerShell only, no extra tools). The same geometry is in `src\Ui.cs` (`Ui.Logo`); keep them in sync when changing the design.
 
 ## Security
-Prisma has no network access, starts no processes and runs as the normal user. It limits and validates all input (expressions, pasted text, `settings.ini`, `rates.ini`, command-line paths), restricts DLL loading to the Windows system folder and is built with ASLR, DEP and warnings-as-errors. Details, the threat model and known limits are in `SECURITY.md`. `verify.ps1` checks the files against `SHA256SUMS.txt`.
+Prisma has no network access, starts no processes and runs as the normal user. It limits and validates all input (expressions, pasted text, `settings.ini`, `rates.ini`, command-line paths), restricts DLL loading to the Windows system folder and is built with ASLR, DEP and warnings-as-errors. Details, the threat model and known limits are in `SECURITY.md`. If your antivirus flags `Prisma.exe` it is a false positive (the file is unsigned and new, so it has no reputation yet); see the note in `SECURITY.md`. `verify.ps1` checks the files against `SHA256SUMS.txt`.
 
 ## Build
 Needs only Windows' built-in `csc.exe` (.NET Framework 4.x developer files in `C:\Windows\Microsoft.NET\Framework64\v4.0.30319`). No downloads, no third-party dependency.
 ```
 powershell -ExecutionPolicy Bypass -File build.ps1     # compiles src\*.cs to dist\Prisma.exe
-powershell -ExecutionPolicy Bypass -File test.ps1      # 377 self-tests, no window shown, no network
+powershell -ExecutionPolicy Bypass -File test.ps1      # builds the test program and runs 379 self-tests (no window shown, no network)
 powershell -ExecutionPolicy Bypass -File package.ps1   # dist\ + SHA256SUMS.txt + Prisma.zip (local only)
 powershell -ExecutionPolicy Bypass -File verify.ps1    # checks dist\ against SHA256SUMS.txt
 ```
-`build.ps1` sets `DOTNET_CLI_TELEMETRY_OPTOUT=1` and moves `TEMP`/`TMP` to `.\.tmp`. `fetch-deps.ps1` only checks the toolchain.
+The tests are **not** part of `Prisma.exe`: `test.ps1` compiles `tests\*.cs` into a separate `Prisma.Tests.exe` (in `build\`, never shipped) that loads the real `dist\Prisma.exe` as a library. The released program therefore contains no test code and none of the strings the security tests search for (names of download or networking APIs), which also keeps antivirus scanners from misreading it. `build.ps1` sets `DOTNET_CLI_TELEMETRY_OPTOUT=1` and moves `TEMP`/`TMP` to `.\.tmp`. `fetch-deps.ps1` only checks the toolchain.
 
 ## Run
 ```
 dist\Prisma.exe [--theme Default|Light|Dark] [--mode <name>] [--language System|en|de|fr|es] [--settings <file>] [--log <file>]
 dist\Prisma.exe --print-theme      # prints theme mode / OS setting / effective theme, no window
-dist\Prisma.exe --selftest         # runs the self-tests
 ```
 Modes: Standard Scientific Programmer Graphing Date Currency Volume Length Weight Temperature Energy Area Speed Time Power Data Pressure Angle Settings.
 Exit codes: 0 ok, 1 failure (or a failed self-test), 2 usage error. Runtime: .NET Framework 4.6.2 or newer (part of Windows 10 1607+ and Windows 11).
