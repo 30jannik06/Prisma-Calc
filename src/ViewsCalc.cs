@@ -462,7 +462,7 @@ namespace Prisma
         {
             switch (k)
             {
-                case "C": p.Clear(); break;
+                case "CLR": p.Clear(); break;   // not "C": that is the hex digit
                 case "CE": p.ClearEntry(); break;
                 case "BK": p.Back(); break;
                 case "=": p.Equals(); break;
@@ -511,7 +511,7 @@ namespace Prisma
         public bool HandleKey(Key key)
         {
             if (key == Key.Enter) Press("=");
-            else if (key == Key.Escape) Press("C");
+            else if (key == Key.Escape) Press("CLR");
             else if (key == Key.Back) Press("BK");
             else if (key == Key.Delete) Press("CE");
             else return false;

@@ -170,7 +170,7 @@ namespace Prisma
             widths.Sort();
             Check("branding: Windows' image decoder reads all 7 icon sizes", string.Join(",", widths.ConvertAll(x => x.ToString()).ToArray()) == "16,24,32,48,64,128,256", string.Join(",", widths.ConvertAll(x => x.ToString()).ToArray()));
             var a = typeof(MainWindow).Assembly.GetName();
-            Check("branding: version is 1.1.1.0", a.Version.ToString() == "1.1.1.0", a.Version.ToString());
+            Check("branding: version is 1.1.2.0", a.Version.ToString() == "1.1.2.0", a.Version.ToString());
 
             if (Application.Current == null) new Application();
             string oldS = Settings.Path;
@@ -612,6 +612,11 @@ namespace Prisma
                 prog.Engine.SetBase(16);
                 prog.Press("F"); prog.Press("F");
                 Check("programmer view shows FF as 255 / 1111 1111", prog.ValueIn(10) == "255" && prog.ValueIn(2) == "1111 1111", prog.ValueIn(10) + " / " + prog.ValueIn(2));
+                // regression: the C key typed a hex digit as "clear" (issue #2)
+                prog.Press("CLR"); prog.Press("C"); prog.Press("1");
+                Check("programmer view: the C key types the hex digit C (C1 = 193)", prog.ValueIn(10) == "193", prog.ValueIn(10));
+                Check("programmer view: typing the letter c on the keyboard types C", prog.HandleText("c") && prog.ValueIn(16).Replace(" ", "").EndsWith("C1C"), prog.ValueIn(16));
+                prog.Engine.SetBase(16);
 
                 // Converter
                 w.SwitchTo(AppMode.Length);

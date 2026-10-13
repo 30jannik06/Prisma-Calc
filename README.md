@@ -59,7 +59,7 @@ Currency uses **example rates, not live rates** (no network access). Put your ow
 - Every style, variant, glass on/off and several accent colours are checked for readable contrast by the self-tests.
 
 ## Logo and icon
-The logo is a prism that splits a white beam into five colours, drawn from scratch for Prisma (not taken from any other app). It is the program icon (16 to 256 px, embedded in `Prisma.exe`), the window and taskbar icon, the mark in the sidebar and the picture on the About card in Settings. The file properties (product, version 1.1.1, company, licence) are set too.
+The logo is a prism that splits a white beam into five colours, drawn from scratch for Prisma (not taken from any other app). It is the program icon (16 to 256 px, embedded in `Prisma.exe`), the window and taskbar icon, the mark in the sidebar and the picture on the About card in Settings. The file properties (product, version 1.1.2, company, licence) are set too.
 - `assets\prisma.ico` - icon with 7 sizes (small sizes use thicker lines and three beams so they stay readable)
 - `assets\prisma-logo.svg` - vector logo; `assets\prisma-256.png` - preview
 - `tools\make-icon.ps1` regenerates all three (Windows PowerShell only, no extra tools). The same geometry is in `src\Ui.cs` (`Ui.Logo`); keep them in sync when changing the design.

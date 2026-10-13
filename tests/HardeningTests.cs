@@ -411,7 +411,7 @@ namespace Prisma
             int[] ic = IconResourceCounts(exe);
             check("branding: the program file carries its icon (1 icon group with 7 sizes)", ic[0] == 7 && ic[1] == 1, "icons=" + ic[0] + " groups=" + ic[1]);
             var vi = FileVersionInfo.GetVersionInfo(path);
-            check("branding: file properties name the product, version and licence", vi.ProductName == "Prisma" && vi.FileVersion == "1.1.1.0" && vi.CompanyName == "Prisma authors" && vi.LegalCopyright.Contains("MIT"), vi.ProductName + " " + vi.FileVersion);
+            check("branding: file properties name the product, version and licence", vi.ProductName == "Prisma" && vi.FileVersion == "1.1.2.0" && vi.CompanyName == "Prisma authors" && vi.LegalCopyright.Contains("MIT"), vi.ProductName + " " + vi.FileVersion);
         }
     }
 

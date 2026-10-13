@@ -2,6 +2,11 @@
 
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-10-13
+
+### Fixed
+- **Programmer mode: the `C` key typed nothing but cleared the input** instead of entering the hex digit C, so numbers containing C could not be entered (also with the keyboard). Reported in issue #2 by @maik26-hub. The clear action now has its own internal name; Esc still clears. Two new self-tests cover the button and the keyboard.
+
 ## [1.1.1] - 2026-10-13
 
 ### Changed
