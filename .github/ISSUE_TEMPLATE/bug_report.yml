@@ -1,0 +1,49 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. **Security problems:** please do not use this form, see SECURITY.md.
+  - type: input
+    id: version
+    attributes:
+      label: Prisma version
+      description: Settings > About, or the file properties of Prisma.exe.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 23H2"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What did you press or type? Include the mode (for example Scientific) and, for calculations, the input.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+      description: Add a screenshot if it is a visual problem.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional)
+      description: "Relevant lines from %LOCALAPPDATA%\\Prisma\\prisma.log. Please check them for personal data first."
+      render: text

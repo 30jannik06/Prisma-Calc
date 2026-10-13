@@ -1,0 +1,18 @@
+name: Feature request
+description: Suggest an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to be able to do?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+  - type: markdown
+    attributes:
+      value: |
+        Note: Prisma deliberately has no network access, starts no other programs and uses no third-party code (see CONTRIBUTING.md). Ideas that need one of these are best discussed here first.

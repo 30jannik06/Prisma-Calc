@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# The workflow only reads the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build, test, package
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check the toolchain
+        shell: powershell
+        run: ./fetch-deps.ps1
+
+      - name: Build (warnings are errors)
+        shell: powershell
+        run: ./build.ps1
+
+      - name: Self-tests
+        shell: powershell
+        run: ./test.ps1
+
+      - name: Keep the test output if something failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selftest-output
+          path: dist/selftest-output.txt
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Package
+        shell: powershell
+        run: ./package.ps1
+
+      - name: Verify the package against its checksums
+        shell: powershell
+        run: ./verify.ps1
+
+      - name: Upload the build
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-${{ github.sha }}
+          path: |
+            Prisma.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30

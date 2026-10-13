@@ -1,0 +1,75 @@
+name: Release
+
+# Runs when a version tag such as v1.0.0 is pushed.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write      # create the release and upload its files
+  id-token: write      # needed for the build provenance attestation
+  attestations: write
+
+jobs:
+  release:
+    name: Build, test and publish
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: The tag must match the program version
+        shell: powershell
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          $tag = $env:TAG.TrimStart('v')
+          $m = Select-String -Path src/AssemblyInfo.cs -Pattern 'AssemblyVersion\("([0-9.]+)"\)'
+          if (-not $m) { throw 'AssemblyVersion not found in src/AssemblyInfo.cs' }
+          $ver = $m.Matches[0].Groups[1].Value
+          if ("$tag.0" -ne $ver) { throw "Tag v$tag does not match AssemblyVersion $ver" }
+          Write-Host "Tag v$tag matches version $ver"
+
+      - name: Build
+        shell: powershell
+        run: ./build.ps1
+
+      - name: Self-tests
+        shell: powershell
+        run: ./test.ps1
+
+      - name: Package
+        shell: powershell
+        run: ./package.ps1
+
+      - name: Verify the package against its checksums
+        shell: powershell
+        run: ./verify.ps1
+
+      - name: Attest the build (public repositories)
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: Prisma.zip
+
+      - name: Publish the release
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath Prisma.zip).Hash.ToLowerInvariant()
+          $notes = @"
+          ## Prisma $env:TAG
+
+          **SHA-256 of Prisma.zip:** ``$hash``
+
+          Check a download in PowerShell: ``(Get-FileHash Prisma.zip -Algorithm SHA256).Hash`` and compare it with the value above.
+          The zip also contains ``SHA256SUMS.txt`` and ``verify.ps1`` can be used from the source repository.
+
+          The program is not code-signed, so Windows SmartScreen may warn on first start. See SECURITY.md.
+          "@
+          gh release create $env:TAG Prisma.zip dist/SHA256SUMS.txt --title "Prisma $env:TAG" --notes $notes --generate-notes --verify-tag

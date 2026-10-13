@@ -1,0 +1,20 @@
+# Build output (produced by build.ps1 / package.ps1; releases are built by CI)
+/dist/
+/Prisma.zip
+/Prisma/
+
+# Local scratch space used by the scripts and by manual testing
+/.tmp/
+
+# Logs and test output
+*.log
+*.log.1
+selftest-output.txt
+
+# Windows / editors
+Thumbs.db
+Desktop.ini
+.vs/
+.vscode/
+*.user
+*.suo
